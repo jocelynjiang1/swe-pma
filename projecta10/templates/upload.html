@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make a post</title>
+    <style>
+        /* Back button styling */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;  /* Set the arrow color to black */
+        }
+
+        .back-btn:hover {
+            color: #555;  /* Darker shade of black on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Button Icon -->
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> <!-- FontAwesome left arrow icon -->
+    </button>
+    
+    <h1>Upload a Document</h1>
+    {% if form.non_field_errors %}
+        <div style="color: red;">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+{#        {{ form.as_p }}#}
+        <p>{{ form.file.label}} (PDF or plain text): {{ form.file }}</p>
+        <p>{{ form.title.label}}: {{ form.title }}</p>
+        <p>{{ form.description.label}}: {{ form.description }}</p>
+        <p><label for="new_keyword">Create a new keyword:</label>
+            <input type="text" name="new_keyword" id="new_keyword">
+        </p>
+        <p>{{ form.keywords.label}}: {{ form.keywords }}</p>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+ <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+{% endblock %}
+
+{# Fields originally part of UploadFileForm #}
+{#        <p><label for="new_keyword">Create a new keyword:</label>#}
+{#            <input type="text" name="new_keyword" id="new_keyword">#}
+{#        </p>#}
+{#        <p>{{ form.title.label}}: {{ form.title }}</p>#}
+{#        <p>{{ form.description.label}}: {{ form.description }}</p>#}
+{#        <p>{{ form.keywords.label}}: {{ form.keywords }}</p>#}

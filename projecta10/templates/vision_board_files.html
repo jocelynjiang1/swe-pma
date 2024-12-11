@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .files {
+            list-style: none;
+        }
+        .delete-btn{
+            margin-left: 8px;
+        }
+
+         /* Back button styling */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;  /* Set the arrow color to black */
+        }
+
+        .back-btn:hover {
+            color: #555;  /* Darker shade of black on hover */
+        }
+    </style>
+
+    <!-- Back Button Icon -->
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> <!-- FontAwesome left arrow icon -->
+    </button>
+
+    {% if messages %}
+      {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <h1>Documents</h1>
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> <!-- FontAwesome left arrow icon -->
+    </button>
+    <div class="container">
+        <ul>
+        {% for file in files %}
+            <li class="files">
+                {% if file.file_type == 'text' %}
+                    <a title="Open File" href="{{  file.file.url }}" download="{{ file.title }}">
+                        <i class="fas fa-file-alt"></i> {{ file.title }}  
+                    </a>
+                    <a class="delete-btn" title="Delete File" href="{% url 'delete_file' pk=file.id %}">
+                        <i class="fas fa-trash-alt"></i> 
+                    </a>
+
+                {% elif file.file_type == 'pdf' %}
+                    <a title="Open File" href="{{ file.file.url }}" download="{{ file.title }}">
+                        <i class="fas fa-file-pdf"></i> {{ file.title }} </a>
+                    <a class="delete-btn" title="Delete File" href="{% url 'delete_file' pk=file.id %}">
+                        <i class="fas fa-trash-alt"></i> 
+                    </a>
+                {% endif %}
+            </li>
+
+        {% empty %}
+            <li>No files available.</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+        <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+{% endblock content %}

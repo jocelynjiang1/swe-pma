@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Document uploaded successfully!</h2>
+<a href="{% url 'upload_file' vision_board_id=vision_board_id %}">Upload another file</a>
+{% endblock %}

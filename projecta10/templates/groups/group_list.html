@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    #boards {
+        display: flex;
+    } h2 {
+        text-align: center;
+    }
+    figure {
+        margin: 10px;
+    }
+</style>
+  <div class="flex-container justify-content-center">
+    <h2 class=>All Vision Boards</h2>
+    <div class="container" id="boards" style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 100%; overflow: hidden;">
+      {% for vb_dict in vision_board_data %}
+          {% if request.user not in vb_dict.vision_board.members.all %} {# if user not member of a vb yet #}
+              <figure>
+                <img src="{{ vb_dict.latest_image.thumbnail.url }}" alt="test" width="100px" height="100px"/>
+                <figcaption>{{ vb_dict.vision_board.name }} by {{ vb_dict.vision_board.owner }}</figcaption>
+              <form action="{% url 'join_vision_board' pk=vb_dict.vision_board.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Join Group</button>
+              </form>
+              </figure>
+
+          {% else %} {# if user already member of vision board #}
+            {% if vb_dict.latest_image.thumbnail %}
+                <div class="flex-item">
+                    <a href= "{% url 'vision_board_view' pk=vb_dict.vision_board.id %}"><figure>
+                        <img src="{{ vb_dict.latest_image.thumbnail.url }}" alt="test" width="100px" height="100px"/>
+                        <figcaption>{{ vb_dict.vision_board.name }} by {{ vb_dict.vision_board.owner }}</figcaption>
+                    </figure> </a>
+                </div>
+            {% endif %}
+{#            <span>You are already a member</span>#}
+          {% endif %}
+      {% empty %}
+          <p>There are no Vision Boards yet. Be the first to create one!</p>
+      {% endfor %}
+    </div>
+
+  </div>
+{% endblock %}
+

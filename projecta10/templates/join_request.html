@@ -1,0 +1,24 @@
+<div class="request-container" id="pending_join_request-{{ pending_join_request.id }}">
+    <h3>{{ pending_join_request.subject }}</h3>
+    <div class="message-content">
+        <p>Sent by {{ pending_join_request.sender }} on: {{ pending_join_request.creation_date }}</p>
+        <p>{{ pending_join_request.message }}</p>
+    </div>
+    <div class="disposition-row">
+        <!-- Accept Button -->
+        <div class="accept disposition" 
+             data-id="{{ pending_join_request.id }}" 
+             data-status="accepted">
+            <i class="fa-sharp fa-solid fa-check" id="accept-btn"></i>
+            <span>Accept</span>
+        </div>
+
+        <!-- Reject Button -->
+        <div class="reject disposition" 
+             data-id="{{ pending_join_request.id }}" 
+             data-status="rejected">
+            <i class="fa-sharp fa-solid fa-circle-xmark" id="reject-btn"></i>
+            <span>Reject</span>
+        </div>
+    </div>
+</div>

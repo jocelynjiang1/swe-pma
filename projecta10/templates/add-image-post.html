@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;  
+        }
+
+        .back-btn:hover {
+            color: #555;  
+        }
+    </style>
+
+    <!-- Back Button Icon -->
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> 
+    </button>
+
+    <h1>Create a New Post</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ post_form.as_p }}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+{% endblock %}

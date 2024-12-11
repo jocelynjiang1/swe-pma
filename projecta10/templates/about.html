@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="text-center">About</h2>
+    <h4>Group name</h4>
+    <p>{{ vision_board.name }}</p>
+    
+    <h4>Group description</h4>
+    <p>{{ vision_board.description }}</p>
+    <h4>Owner</h4>
+    <ul><li>{{ vision_board.owner }}</li></ul>
+    <h4>Members</h4> 
+    {%if members %}
+        <ul>
+            {% for member in members %}
+                <li>{{ member.first_name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <a href="{% url 'vision_board_view' pk=vision_board.id %}" class="btn" style="border: 2px groove gray;
+    background-color: #fff;">
+        Return to board
+    </a>
+{% endblock %}

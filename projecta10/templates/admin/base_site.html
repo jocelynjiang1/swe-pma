@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% block title %}
+    {% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+{% block branding %}
+<div>
+    <div id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></div>
+    <div>
+        {% if user.is_authenticated and user.is_staff %}
+            Please give admin status to the following users:
+            <ul>
+                <li>
+                    <a href="{% url 'admin_requests' %}">View Admin Requests</a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% if user.is_anonymous %}
+    {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+{% block userlinks %}
+    {% if user.is_active and user.is_staff %}
+        {% url 'django-admindocs-docroot' as docsroot %}
+        {% if docsroot %}
+            <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
+        {% endif %}
+    {% endif %}
+    {% if user.has_usable_password %}
+    <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+    {% endif %}
+    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+        {% csrf_token %}
+        <button type="submit">{% translate 'Log out' %}</button>
+    </form>
+    {% include "admin/color_theme_toggle.html" %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

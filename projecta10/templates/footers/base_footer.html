@@ -1,0 +1,41 @@
+<style>
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+footer .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+footer .btn-primary {
+    background-color: #8fb7d3; /* Same as the common page */
+    color: white;
+    border: none;
+}
+
+footer .btn-primary:hover {
+    opacity: 0.8; /* Hover effect */
+}
+</style>
+
+<footer>
+    <div>
+        <p id="disclaimer"> Note: this system is a class project, the system is not monitored, and no real information should be submitted. </p>
+    </div>
+    {% if user.is_authenticated %}
+       <!-- <a href="{% url 'account_logout' %}" class="btn btn-primary">Logout</a> -->
+    {% else %}
+        <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
+    {% endif %}
+</footer>

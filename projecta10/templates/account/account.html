@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Add the necessary stylesheets for the navbar and icon bar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+    <link rel="stylesheet" href="https://bootswatch.com/5/sketchy/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <style>
+        /* Global styles for html and body */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #d8e3d8;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Body padding for the header */
+        body {
+            padding-top: 350px; /* Adjusted space for the fixed header */
+            padding-bottom: 100px;
+        }
+
+        /* Content wrapper style */
+        .content-wrapper {
+            min-height: calc(100vh - 150px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Badge styles */
+        .badge.bg-success {
+            background-color: #a0b79f;
+        }
+
+        .badge.bg-warning {
+            background-color: #f6e1b3;
+            color: #5f5f5f;
+        }
+
+        .badge.bg-success.text-dark {
+            background-color: #b2c7d3;
+        }
+
+        .badge.bg-primary {
+            background-color: #9abfd0;
+            color: white;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #8fb7d3;
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #8c8c8c;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #e97d6a;
+            color: white;
+            border: none;
+        }
+
+        button[type="submit"][name="email_action"][value="action_add"] {
+            background-color: #7cb6a3;
+            color: white;
+            border: none;
+        }
+
+        /* Theme toggle button styles */
+        #theme-toggle-button {
+            background-color: #6a7a71;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+        
+
+        /* Navbar styles */
+        .icon-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            background-color: #f8f9fa;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        
+        /* Content wrapper style */
+        main {
+            margin-top: 60px;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Icon Bar for Navigation -->
+    <div class="icon-bar">
+        <a href="{% url 'home' %}" style="font-size: 1.5em; color: #000; text-decoration: none;">
+            <i class="fas fa-home"></i>
+        </a>
+    </div>
+    
+
+    <h2>Account Information</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <ul>
+        <li><strong>Username:</strong> {{ user.username }}</li>
+        <li><strong>First Name:</strong> {{ user.first_name }}</li>
+        <li><strong>Last Name:</strong> {{ user.last_name }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>User Type:</strong> {{ user.get_user_type_display }}</li>
+        <li><strong>Preferred Theme:</strong> <span id="current-theme">{{ user.get_theme_display }}</span></li>
+        <li><strong>Join Date:</strong> {{ user.date_joined }}</li>
+    </ul>
+
+    <h2 style="display: block; margin: 25px 0;">Email Addresses</h2>
+    {% if emailaddresses %}
+        <p>The following email addresses are associated with your account:</p>
+        <form method="post" action="{% url 'account' %}">
+        {% csrf_token %}
+            {% for email_address in emailaddresses %}
+                <div class="form-check mb-3">
+                    <input
+                        class="form-check-input" 
+                        type="radio"
+                        name="email"
+                        value="{{ email_address.email }}"
+                        id="email_{{ forloop.counter }}"
+                        {% if email_address.primary or forloop.first %}checked{% endif %}
+                    >
+                    <label class="form-check-label" for="email_{{ forloop.counter }}">
+                        {{ email_address.email }}
+                        {% if email_address.verified %}
+                            <span class="badge bg-success">Verified</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Unverified</span>
+                        {% endif %}
+                        {% if email_address.primary %}
+                            <span class="badge badge-primary bg-success">Primary</span>
+                        {% endif %}
+                    </label>
+                </div>
+            {% endfor %}
+            <button type="submit" name="email_action" value="action_primary" class="btn btn-primary">Make Primary</button>
+            <button type="submit" name="email_action" value="action_send" class="btn btn-secondary">Re-send Verification</button>
+            <button type="submit" name="email_action" value="action_remove" class="btn btn-danger">Remove</button>
+        </form>
+    {% else %}
+        <p>No email addresses associated with your account.</p>
+    {% endif %}
+
+    {% if can_add_email %}
+        <h3 style="margin: 25px 0;">Add Email Address</h3>
+        <form method="post" action="{% url 'account' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="email_action" value="action_add" class="btn btn-secondary">Add Email</button>
+        </form>
+    {% endif %}
+
+    <hr>
+    <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" style="margin: 0 0 50px 0;">Sign Out</button>
+    </form>
+{% endblock %}

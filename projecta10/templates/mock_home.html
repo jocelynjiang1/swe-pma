@@ -1,0 +1,119 @@
+{% extends "base.html" %} {% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'mock_home.css' %}" />
+    <script src="https://unpkg.com/colcade@0/colcade.js"></script>
+  </head>
+  <body>
+    {% block content %}
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_email' %}">Account</a>
+            </li>
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="{% url 'group_list' %}">Groups</a>#}
+{#            </li>#}
+{#            <li class="nav-item">#}
+{#              <a class="nav-link" href="{% url 'create_group' %}"#}
+{#                >Create Group</a#}
+{#              >#}
+{#            </li>#}
+            <li class="nav-item">
+              <a class="nav-link disabled">Placeholder</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container" style="overflow: hidden; padding-top: 20px">
+      <div class="container text-center py-5 px-3">
+        <div class="search">Search Form (Placeholder)</div>
+        <p class="lead">Welcome to your home page, {{ username }}.<br /></p>
+
+        <div class="container boards-container">
+          <div class="grid boards">Boards</div>
+
+          <div class="latest-images">
+            <h2>Latest Images</h2>
+            <!-- Display latest images -->
+            {% for image in latest_images %}
+            <div class="image-container">
+              {% if image.thumbnail %}
+              <a href="#" class="grid-item">
+                <img src="{{ image.thumbnail.url }}" alt="{{ image.title }}" />
+              </a>
+              {% endif %}
+
+              <div class="image-details">
+                <h3>{{ image.title }}</h3>
+                <p>{{ image.description }}</p>
+              </div>
+            </div>
+            {% empty %}
+          </div>
+          <p>
+            You don't have any Boards yet. Click the button below to create a
+            new Board or use the search bar to find a new Board!
+          </p>
+          {% endfor %}
+
+          <div class="latest-files">
+            <h2>Latest Files</h2>
+
+            {% for file in latest_files %}
+            <div class="file-container">
+              <h3>{{ file.title }}</h3>
+              <p>{{ file.description }}</p>
+              <p>Uploaded on: {{ file.timestamp|date:"F j, Y, g:i a" }}</p>
+
+              {% if file.keywords.all %}
+              <div class="keywords">
+                <strong>Keywords:</strong>
+                <ul style="list-style-type: none; padding: 0; margin: 0">
+                  {% for keyword in file.keywords.all %}
+                  <li>{{ keyword.name }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% else %}
+              <p>No keywords available.</p>
+              {% endif %}
+            </div>
+            {% empty %}
+            <p>No files available.</p>
+            {% endfor %}
+          </div>
+
+          <div class="container board-actions">
+            Create a new Board (Placeholder)
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {% endblock %}
+  </body>
+</html>

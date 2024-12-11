@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load socialaccount %}  <!-- Add this line to load social account tags -->
+{% block navbar %}
+    <nav>
+        {% if user.is_authenticated %}
+            Hello, {{ user.username }}! |
+            <a href="{% url 'account_logout' %}">Logout</a>
+        {% else %}
+            {% comment %} <a href="{% url 'account_login' %}">Login</a> | {% endcomment %}
+            {% comment %} <a href="{% url 'account_signup' %}">Sign Up</a> {% endcomment %}
+        {% endif %}
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert text-center {{ message.tags }}" style="margin: 0; padding: 0">{{ message }}</div> <!---->
+            {% endfor %}
+        {% endif %}
+        <h2 class="text-center" style="color: seagreen;">Welcome! Please Login</h2>
+        
+        <!-- Button for logging in anonymously -->
+        <div class="d-grid gap-2">
+            <a type="submit" class="btn btn-primary" href="{% url 'anonymous_login' %}">Login Anonymously</a>
+        </div>
+
+        <!-- Google login section -->
+        <h3 class="text-center mt-4">Or login with:</h3>
+        <ul class="list-unstyled text-center">
+            {% providers_media_js %}  <!-- This tag requires {% load socialaccount %} -->
+            {% get_providers as providers %}
+            {% for provider in providers %}
+                {% if provider.id == 'google' %}
+                    <li class="mb-2">
+                        <!-- Use the provider's login URL for Google login -->
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-secondary">
+                            Login with Google
+                        </a>
+                    </li>
+                {% else %}
+                    <!-- If there are other providers, show them here -->
+                    <li class="mb-2">
+                        <a href="{% provider_login_url provider.id %}" class="btn btn-outline-secondary">
+                            Login with {{ provider.name }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

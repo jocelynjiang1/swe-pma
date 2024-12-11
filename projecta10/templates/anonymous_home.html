@@ -1,0 +1,68 @@
+{% extends 'groups/group_list.html' %}
+{% block content %}
+
+<style>
+  main {
+    text-align: center;
+  }
+
+  .lead {
+    display: flex;
+    justify-content: center;
+  }
+
+  ul {
+    list-style-type: none; /* Asked Chat Gpt how to remove bullets */
+    padding-left: 0; 
+  }
+
+  li {
+    padding: 15px 0; 
+    text-align: center; 
+  }
+
+  li img {
+    display: block; 
+    margin: 0 auto; 
+  }
+
+  /* Button styles */
+  .btn-lilac {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #9a7bb5; 
+    color: white;
+    border: none;
+  }
+  .btn-lilac:hover {
+    background-color: #9a7bb5; 
+    color: white;
+    border: none; 
+  }
+</style>
+
+<main class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}" style="margin: 0; padding: 0">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="py-5 px-3">
+    <h1>Home</h1>
+    <p class="lead">Hello! Below is a list of Boards on the site. You're browsing the site anonymously, so some features are restricted.</p>
+  </div>
+
+  <ul>
+    {% for vision_board_dict in vision_board_data %}
+      <li>
+        <img src="{{ vision_board_dict.latest_image.thumbnail.url }}" height="100px" width="100px">
+        <div>{{ vision_board_dict.vision_board.name }} by {{ vision_board_dict.vision_board.owner }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+  <a href="/create-vb/" class="btn btn-lilac">Create a vision board</a>
+</main>
+
+{% endblock %}

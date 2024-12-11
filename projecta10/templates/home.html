@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Home{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    {% block content %}
+      {% block user_content %}
+        {% if user.is_authenticated %}
+            {% if user.user_type == 'site_admin' %}
+                {% include 'site_admin_home.html' %}
+            {% elif user.user_type == 'common' %} 
+                {% include 'common_home.html' %}
+            {% endif %}
+        {% else %}
+            {% include 'anonymous_home.html' with vision_board_data=vision_board_data %}
+        {% endif %}
+      {% endblock %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+  {% include 'footers/base_footer.html' %}
+</html>

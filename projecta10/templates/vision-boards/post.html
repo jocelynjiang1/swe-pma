@@ -1,0 +1,68 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="{% static 'delete-vision-board-post.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>{{ post.name }}</title>
+</head>
+<body>
+    <div class="container" id="post-{{ post.id }}">
+        <!-- Post Title -->
+        <h1>{{ post.name }}</h1> 
+        
+        <!-- Image Display -->
+        <div class="image-display">
+            {% if post.file.file_type == 'image' %} <!-- post is an UploadedImageFile-->
+                <img src="{{ post.file.file.url }}" alt="{{ post.name }}" style="max-width: 50%; max-height: 50%;">
+            {% else %}
+                <p>No image available for this post.</p>
+            {% endif %}
+        </div>
+
+        <!-- Post Caption -->
+        <div class="post-caption">
+            <p>{{ post.caption }}</p>
+        </div>
+
+        <!-- Post Tags -->
+        {% if post.tags.all %}
+            <div class="post-tags">
+                <strong>Tags:</strong>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    {% for tag in post.tags.all %}
+                        <span style="
+                            display: inline-block;
+                            padding: 4px 8px;
+                            border: 1px solid white;
+                            background-color: {{ tag.color }};
+                            border-radius: 4px;
+                        ">
+                            {{ tag.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p>No tags available.</p>
+        {% endif %}
+
+        <!-- Post Creation Date -->
+        <div class="post-date">
+            <p><strong>Posted on:</strong> {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+        </div>
+
+        <!-- Delete Button -->
+        {% if request.user.is_authenticated %}
+            {% if request.user.user_type == 'site_admin' or request.user == post.user %}
+                <a class="delete-button" data-id="{{ post.id }}" href="{% url 'delete_vision_board_post' pk=vision_board.id post_id=post.id %}">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}

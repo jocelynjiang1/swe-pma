@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Back button styling */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;  /* Set the arrow color to black */
+        }
+
+        .back-btn:hover {
+            color: #555;  /* Darker shade of black on hover */
+        }
+    </style>
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> <!-- FontAwesome left arrow icon -->
+    </button>
+    <div class="container">
+        <h1>Create a New Post</h1>
+        <form id="post-type-form" method="post" action="">
+        {% csrf_token %}
+            <label for="post-type" id=post-type-label>What type of post would you like to create?</label>
+            <select id="post-type" name="post_type">
+                <option value="" selected disabled>Choose an option</option>
+                <option value="image">Image Post</option>
+                <option value="blog">Blog Post</option>
+            </select>
+            <input type="submit" value='Create Post'>
+        </form>
+    </div>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+{% endblock %}
